@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - LMS Platform</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/student.css">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h3 {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 10px 20px;
+            color: #adb5bd;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid #007bff;
+        }
+        
+        .sidebar-menu li a.active {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            background-color: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h2 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .stat-info h3 {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            font-size: 20px;
+            font-weight: 600;
+            color: #343a40;
+            margin: 0;
+        }
+        
+        .courses-container {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: #343a40;
+        }
+        
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .course-image {
+            height: 160px;
+            background-color: #e9ecef;
+            position: relative;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .course-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #28a745;
+        }
+        
+        .course-details {
+            padding: 20px;
+        }
+        
+        .course-details h4 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .course-details p {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .upcoming-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .upcoming-list {
+            list-style: none;
+        }
+        
+        .upcoming-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+        
+        .upcoming-item:last-child {
+            border-bottom: none;
+        }
+        
+        .upcoming-date {
+            width: 50px;
+            height: 50px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .upcoming-date .day {
+            font-size: 18px;
+            font-weight: 600;
+            color: #343a40;
+        }
+        
+        .upcoming-date .month {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .upcoming-details h4 {
+            margin-bottom: 5px;
+            color: #343a40;
+            font-size: 16px;
+        }
+        
+        .upcoming-details p {
+            color: #6c757d;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 15px 0;
+            }
+            
+            .sidebar-header {
+                padding: 0 15px 15px;
+            }
+            
+            .sidebar-menu li a {
+                padding: 8px 15px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../index.html">LMS Platform</a></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="course-catalog.html">Courses</a></li>
+                    <li><a href="#" id="user-dropdown">John Doe ▼</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Student Portal</h3>
+                <p>Welcome back, John!</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" class="active">📊 Dashboard</a></li>
+                <li><a href="course-catalog.html">📚 Course Catalog</a></li>
+                <li><a href="learning-interface.html">🎓 My Learning</a></li>
+                <li><a href="assignments.html">📝 Assignments</a></li>
+                <li><a href="certificates.html">🏆 Certificates</a></li>
+                <li><a href="#">⚙️ Settings</a></li>
+                <li><a href="../shared/login.html">🚪 Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2>Student Dashboard</h2>
+                <p>Track your progress and manage your learning journey</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <h3>Enrolled Courses</h3>
+                        <p>5</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3>Completed Courses</h3>
+                        <p>2</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <h3>Certificates Earned</h3>
+                        <p>2</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <h3>Pending Assignments</h3>
+                        <p>3</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="courses-container">
+                <div class="section-header">
+                    <h3>In Progress Courses</h3>
+                    <a href="course-catalog.html" class="btn btn-outline">View All Courses</a>
+                </div>
+                <div class="course-grid">
+                    <div class="course-card">
+                        <div class="course-image">
+                            <img src="https://via.placeholder.com/300x160?text=Web+Development" alt="Web Development">
+                            <div class="course-progress">
+                                <div class="progress-bar" style="width: 75%;"></div>
+                            </div>
+                        </div>
+                        <div class="course-details">
+                            <h4>Web Development Fundamentals</h4>
+                            <p>Learn HTML, CSS, and JavaScript to build modern websites</p>
+                            <div class="course-meta">
+                                <span>75% Complete</span>
+                                <span>12 hours left</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-card">
+                        <div class="course-image">
+                            <img src="https://via.placeholder.com/300x160?text=Data+Science" alt="Data Science">
+                            <div class="course-progress">
+                                <div class="progress-bar" style="width: 45%;"></div>
+                            </div>
+                        </div>
+                        <div class="course-details">
+                            <h4>Introduction to Data Science</h4>
+                            <p>Master data analysis, visualization, and machine learning</p>
+                            <div class="course-meta">
+                                <span>45% Complete</span>
+                                <span>20 hours left</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-card">
+                        <div class="course-image">
+                            <img src="https://via.placeholder.com/300x160?text=UX+Design" alt="UX Design">
+                            <div class="course-progress">
+                                <div class="progress-bar" style="width: 30%;"></div>
+                            </div>
+                        </div>
+                        <div class="course-details">
+                            <h4>UX Design Principles</h4>
+                            <p>Create user-centered designs with proven methodologies</p>
+                            <div class="course-meta">
+                                <span>30% Complete</span>
+                                <span>25 hours left</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>

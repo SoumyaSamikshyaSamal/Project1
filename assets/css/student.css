@@ -1,0 +1,251 @@
+/* Student-specific styles */
+
+/* Custom color scheme for student */
+:root {
+    --student-primary: #4caf50;
+    --student-secondary: #81c784;
+    --student-accent: #ff5722;
+    --student-light: #e8f5e9;
+    --student-dark: #388e3c;
+}
+
+/* Student header customization */
+.student-header {
+    background-color: var(--student-primary);
+}
+
+/* Student sidebar customization */
+.sidebar {
+    background: linear-gradient(to bottom, #388e3c, #1b5e20);
+}
+
+.sidebar-header h3 {
+    color: var(--student-accent);
+}
+
+.sidebar-menu li a:hover, .sidebar-menu li a.active {
+    border-left-color: var(--student-accent);
+}
+
+/* Student cards and elements */
+.stat-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+.stat-icon {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--student-primary);
+}
+
+/* Course cards */
+.course-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.course-progress {
+    height: 5px;
+    background-color: #e9ecef;
+    margin-top: 15px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--student-primary);
+}
+
+/* Student tables */
+.data-table th {
+    background-color: var(--student-light);
+    color: var(--student-dark);
+}
+
+/* Student buttons */
+.student-btn-primary {
+    background-color: var(--student-primary);
+    color: white;
+    border: 2px solid var(--student-primary);
+}
+
+.student-btn-primary:hover {
+    background-color: var(--student-dark);
+    border-color: var(--student-dark);
+}
+
+.student-btn-outline {
+    background-color: transparent;
+    color: var(--student-primary);
+    border: 2px solid var(--student-primary);
+}
+
+.student-btn-outline:hover {
+    background-color: var(--student-primary);
+    color: white;
+}
+
+/* Student forms */
+.student-form input:focus, 
+.student-form select:focus, 
+.student-form textarea:focus {
+    border-color: var(--student-primary);
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+/* Learning interface */
+.learning-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.module-card {
+    background-color: var(--student-light);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--student-primary);
+}
+
+.lesson-item {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-item.completed {
+    border-left: 4px solid var(--student-primary);
+}
+
+.lesson-item.current {
+    border-left: 4px solid var(--student-accent);
+}
+
+/* Assignment cards */
+.assignment-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.assignment-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-completed {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--student-primary);
+}
+
+.status-pending {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+}
+
+.status-overdue {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+/* Certificate styles */
+.certificate-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.certificate-image {
+    height: 180px;
+    background-color: var(--student-light);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.certificate-image img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.certificate-details {
+    padding: 20px;
+}
+
+.certificate-details h4 {
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.certificate-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+/* Responsive student layout */
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--student-primary);
+        color: white;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - LMS Platform</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .courses-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 30px;
+        }
+        
+        .courses-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .courses-header h2 {
+            color: #007bff;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+        }
+        
+        .courses-header p {
+            color: #6c757d;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .course-filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            width: 250px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .course-image {
+            height: 180px;
+            background-color: #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .course-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(0, 123, 255, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .course-content {
+            padding: 20px;
+        }
+        
+        .course-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .course-instructor {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .instructor-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        
+        .instructor-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .course-rating {
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-rating i {
+            color: #ffc107;
+            margin-right: 5px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dee2e6;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination-item:hover, .pagination-item.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>LMS Platform</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="courses.html">Courses</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="courses-container">
+        <div class="courses-header">
+            <h2>Explore Our Courses</h2>
+            <p>Browse through our extensive library of high-quality courses designed to help you achieve your learning goals.</p>
+        </div>
+
+        <div class="course-filters">
+            <div class="filter-group">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Development</button>
+                <button class="filter-btn">Business</button>
+                <button class="filter-btn">Design</button>
+                <button class="filter-btn">Marketing</button>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search courses...">
+            </div>
+        </div>
+
+        <div class="courses-grid">
+            <!-- Course Card 1 -->
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="https://via.placeholder.com/300x180" alt="Web Development">
+                    <div class="course-category">Development</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">Complete Web Development Bootcamp</h3>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar">
+                            <img src="https://via.placeholder.com/30x30" alt="Instructor">
+                        </div>
+                        <span>John Smith</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (245)</span>
+                        </div>
+                        <div class="course-students">
+                            <i class="fas fa-user"></i>
+                            <span>1,200 students</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Card 2 -->
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="https://via.placeholder.com/300x180" alt="Business Strategy">
+                    <div class="course-category">Business</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">Business Strategy Fundamentals</h3>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar">
+                            <img src="https://via.placeholder.com/30x30" alt="Instructor">
+                        </div>
+                        <span>Sarah Johnson</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.6 (189)</span>
+                        </div>
+                        <div class="course-students">
+                            <i class="fas fa-user"></i>
+                            <span>850 students</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Card 3 -->
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="https://via.placeholder.com/300x180" alt="UI/UX Design">
+                    <div class="course-category">Design</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">UI/UX Design Masterclass</h3>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar">
+                            <img src="https://via.placeholder.com/30x30" alt="Instructor">
+                        </div>
+                        <span>Michael Chen</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (320)</span>
+                        </div>
+                        <div class="course-students">
+                            <i class="fas fa-user"></i>
+                            <span>1,500 students</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Card 4 -->
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="https://via.placeholder.com/300x180" alt="Digital Marketing">
+                    <div class="course-category">Marketing</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">Digital Marketing Strategy</h3>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar">
+                            <img src="https://via.placeholder.com/30x30" alt="Instructor">
+                        </div>
+                        <span>Emily Rodriguez</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.7 (215)</span>
+                        </div>
+                        <div class="course-students">
+                            <i class="fas fa-user"></i>
+                            <span>980 students</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Card 5 -->
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="https://via.placeholder.com/300x180" alt="Data Science">
+                    <div class="course-category">Development</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">Data Science and Machine Learning</h3>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar">
+                            <img src="https://via.placeholder.com/30x30" alt="Instructor">
+                        </div>
+                        <span>David Kim</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (278)</span>
+                        </div>
+                        <div class="course-students">
+                            <i class="fas fa-user"></i>
+                            <span>1,350 students</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Card 6 -->
+            <div class="course-card">
+                <div class="course-image">
+                    <img src="https://via.placeholder.com/300x180" alt="Project Management">
+                    <div class="course-category">Business</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">Project Management Professional</h3>
+                    <div class="course-instructor">
+                        <div class="instructor-avatar">
+                            <img src="https://via.placeholder.com/30x30" alt="Instructor">
+                        </div>
+                        <span>Robert Wilson</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.5 (195)</span>
+                        </div>
+                        <div class="course-students">
+                            <i class="fas fa-user"></i>
+                            <span>920 students</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <div class="pagination-item active">1</div>
+            <div class="pagination-item">2</div>
+            <div class="pagination-item">3</div>
+            <div class="pagination-item">4</div>
+            <div class="pagination-item

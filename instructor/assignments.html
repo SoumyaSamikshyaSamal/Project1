@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments - LMS Platform</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/instructor.css">
+    <style>
+        /* Assignments specific styles */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h3 {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 10px 20px;
+            color: #adb5bd;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid #007bff;
+        }
+        
+        .sidebar-menu li a.active {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            background-color: #f8f9fa;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        
+        .page-header h2 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+
+        .tab-navigation {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .tab-navigation .tab-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .tab-navigation .tab-item.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .data-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .status-expired {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .action-btn-view {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+        
+        .action-btn-edit {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .action-btn-delete {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .assignment-form {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .assignment-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .assignment-title {
+            font-weight: 500;
+            color: #343a40;
+            font-size: 18px;
+        }
+
+        .assignment-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .assignment-description {
+            margin-bottom: 20px;
+            color: #495057;
+        }
+
+        .assignment-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .grading-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .submission-details {
+            margin-bottom: 30px;
+        }
+
+        .submission-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .submission-content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .grade-form {
+            margin-top: 30px;
+        }
+
+        .grade-form h4 {
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+
+        .grade-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .feedback-history {
+            margin-top: 30px;
+        }
+
+        .feedback-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .feedback-sender {
+            font-weight: 500;
+            color: #343a40;
+        }
+
+        .feedback-date {
+            color: #6c757d;
+        }
+
+        .feedback-content {
+            color: #495057;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .pagination-item.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .search-filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-options {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../index.html">LMS Platform</a></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="assignments.html" class="active">Assignments</a></li>
+                    <li><a href="#" id="user-dropdown">Professor Smith ▼</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Instructor Portal</h3>
+                <p>Welcome back, Professor!</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html">📊 Dashboard</a></li>
+                <li><a href="course-management.html">📚 Course Management</a></li>
+                <li><a href="student-management.html">🧑‍🎓 Student Management</a></li>
+                <li><a href="assignments.html" class="active">📝 Assignments</a></li>
+                <li><a href="earnings.html">💰 Earnings</a></li>
+                <li><a href="profile.html">👤 Profile</a></li>
+                <li><a href="../shared/login.html">🚪 Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Assignments</h2>
+                <p>Create and manage assignments for your courses</p>
+            </div>
+
+            <div class="tab-navigation">
+                <div class="tab-item active" data-tab="all-assignments">All Assignments</div>
+                <div class="tab-item" data-tab="create-assignment">Create Assignment</div>
+                <div class="tab-item" data-tab="grade-submissions">Grade Submissions</div>
+            </div>
+
+            <!-- All Assignments Tab -->
+            <div class="tab-content active" id="all-assignments">
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search assignments...">
+                    </div>
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="all">All Courses</option>
+                            <option value="intro-programming">Introduction to Programming</option>
+                            <option value="web-dev">Web Development Fundamentals</option>
+                            <option value="data-structures">Advanced Data Structures</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Assignment Title</th>
+                                <th>Course</th>
+                                <th>Due Date</th>
+                                <th>Submissions</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Assignment #1: Variables and Data Types</td>
+                                <td>Introduction to Programming</td>
+                                <td>2023-06-20</td>
+                                <td>32/45</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Assignment #2: Control Structures</td>
+                                <td>Introduction to Programming</td>
+                                <td>2023-07-05</td>
+                                <td>0/45</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Project #1: HTML/CSS Portfolio</td>
+                                <td>Web Development Fundamentals</td>
+                                <td>2023-06-25</td>
+                                <td>18/28</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Assignment #3: Functions and Methods</td>
+                                <td>Introduction to Programming</td>
+                                <td>2023-05-30</td>
+                                <td>42/45</td>
+                                <td><span class="status-badge status-expired">Expired</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Assignment #1: Linked Lists</td>
+                                <td>Advanced Data Structures</td>
+                                <td>2023-06-15</td>
+                                <td>25/28</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <div class="pagination-item active">1</div>
+                    <div class="pagination-item">2</div>
+                    <div class="pagination-item">3</div>
+                </div>
+            </div>
+
+            <!-- Create Assignment Tab -->
+            <div class="tab-content" id="create-assignment">
+                <div class="assignment-form">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="assignment-title">Assignment Title</label>
+                                <input type="text" id="assignment-title" placeholder="Enter assignment title">
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-course">Course</label>
+                                <select id="assignment-course">
+                                    <option value="">Select a course</option>
+                                    <option value="intro-programming">Introduction to Programming</option>
+                                    <option value="web-dev">Web Development Fundamentals</option>
+                                    <option value="data-structures">Advanced Data Structures</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assignment-description">Assignment Description</label>
+                            <textarea id="assignment-description" placeholder="Enter assignment description and instructions"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="assignment-points">Total Points</label>
+                                <input type="number" id="assignment-points" placeholder="Enter total points">
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-due-date">Due Date</label>
+                                <input type="date" id="assignment-due-date">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="assignment-type">Assignment Type</label>
+                                <select id="assignment-type">
+                                    <option value="">Select assignment type</option>
+                                    <option value="written">Written Assignment</option>
+                                    <option value="quiz">Quiz</option>
+                                    <option value="project">Project</option>
+                                    <option value="presentation">Presentation</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignment-visibility">Visibility</label>
+                                <select id="assignment-visibility">
+                                    <option value="visible">Visible to Students</option>
+                                    <option value="hidden">Hidden from Students</option>
+                                    <option value="scheduled">Scheduled Release</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assignment-files">Attachment Files (Optional)</label>
+                            <input type="file" id="assignment-files" multiple>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline">Save as Draft</button>
+                            <button type="submit" class="btn btn-primary">Create Assignment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Grade Submissions Tab -->
+            <div class="tab-content" id="grade-submissions">
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search submissions...">
+                    </div>
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="all">All Assignments</option>
+                            <option value="assignment1">Assignment #1: Variables and Data Types</option>
+                            <option value="assignment2">Assignment #2: Control Structures</option>
+                            <option value="project1">Project #1: HTML/CSS Portfolio</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="graded">Graded</option>
+                            <option value="ungraded">Ungraded</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Assignment</th>
+                                <th>Submission Date</th>
+                                <th>Status</th>
+                                <th>Grade</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Smith</td>
+                                <td>Assignment #1: Variables and Data Types</td>
+                                <td>2023-06-15</td>
+                                <td><span class="status-badge status-active">Graded</span></td>
+                                <td>90/100</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit Grade</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Emily Davis</td>
+                                <td>Assignment #1: Variables and Data Types</td>
+                                <td>2023-06-14</td>
+                                <td><span class="status-badge status-pending">Ungraded</span></td>
+                                <td>-</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Grade</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Michael Brown</td>
+                                <td>Project #1: HTML/CSS Portfolio</td>
+                                <td>2023-06-20</td>
+                                <td><span class="status-badge status-pending">Ungraded</span></td>
+                                <td>-</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Grade</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sarah Johnson</td>
+                                <td>Assignment #1: Variables and Data Types</td>
+                                <td>2023-06-12</td>
+                                <td><span class="status-badge status-active">Graded</span></td>
+                                <td>85/100</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit Grade</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Robert Wilson</td>
+                                <td>Assignment #1: Linked Lists</td>
+                                <td>2023-06-10</td>
+                                <td><span class="status-badge status-active">Graded</span></td>
+                                <td>92/100</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit Grade</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grading-section" style="display: none;">
+                    <h3>Grade Submission</h3>
+                    <div class="submission-details">
+                        <h4>Emily Davis - Assignment #1: Variables and Data Types</h4>
+                        <div class="submission-meta">
+                            <span>Submitted: June 14, 2023 at 3:45 PM</span>
+                            <span>Due Date: June 20, 2023</span>
+                        </div>
+                        <div class="submission-content">
+                            <p>This is the student's submission content. It would include their answers, code, or uploaded files depending on the assignment type.</p>
+                        </div>
+                    </div>
+
+                    <div class="grade-form">
+                        <h4>Provide Feedback and Grade</h4>
+                        <div class="form-group">
+                            <label for="grade-points">Points (out of 100)</label>
+                            <input type="number" id="grade-points" placeholder="Enter points">
+                        </div>
+                        <div class="form-group">
+                            <label for="grade-feedback">Feedback</label>
+                            <textarea id="grade-feedback" placeholder="Enter feedback for the student"></textarea>
+                        </div>
+                        <div class="grade-actions">
+                            <button type="button" class="btn btn-outline">Cancel</button>
+                            <button type="button" class="btn btn-primary">Submit Grade</button>
+                        </div>
+                    </div>
+
+                    <div class="feedback-history">
+                        <h4>Feedback History</h4>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-sender">Professor Smith</span>
+                                <span class="feedback-date">June 10, 2023</span>
+                            </div>
+                            <div class="feedback-content">
+                                <p>Good work on implementing the variables correctly. Make sure to use more descriptive variable names in the future to improve code readability.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Tab navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabItems = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabItems.forEach(tab => tab.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

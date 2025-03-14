@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LMS Platform</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        
+        .form-group input.error {
+            border-color: #dc3545;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .form-footer p {
+            margin-top: 15px;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+        }
+        
+        .user-type-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-type-selector label {
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        
+        .user-type-selector input {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../index.html">LMS Platform</a></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="login.html" class="active">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2>Login to Your Account</h2>
+                    <p>Access your dashboard and continue your journey</p>
+                </div>
+                
+                <form id="login-form" action="#" method="post">
+                    <div class="user-type-selector">
+                        <label>
+                            <input type="radio" name="user-type" value="student" checked>
+                            Student
+                        </label>
+                        <label>
+                            <input type="radio" name="user-type" value="instructor">
+                            Instructor
+                        </label>
+                        <label>
+                            <input type="radio" name="user-type" value="admin">
+                            Administrator
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <label style="display: inline-flex; align-items: center;">
+                            <input type="checkbox" name="remember" style="width: auto; margin-right: 8px;">
+                            Remember me
+                        </label>
+                        <a href="forgot-password.html">Forgot Password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-login">Login</button>
+                    
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="register.html">Register Now</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>LMS Platform</h2>
+                    <p>Empowering education worldwide</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <p>Email: info@lmsplatform.com</p>
+                    <p>Phone: +1 (123) 456-7890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 LMS Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const userTypeRadios = document.querySelectorAll('input[name="user-type"]');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get selected user type
+                let userType;
+                userTypeRadios.forEach(radio => {
+                    if (radio.checked) {
+                        userType = radio.value;
+                    }
+                });
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // In a real application, you would send this data to a server for authentication
+                // For demo purposes, we'll redirect to the appropriate dashboard
+                console.log(`Login attempt: ${email} as ${userType}`);
+                
+                // Simulate successful login and redirect
+                // In a real application, this would happen after server validation
+                switch(userType) {
+                    case 'student':
+                        window.location.href = '../student/dashboard.html';
+                        break;
+                    case 'instructor':
+                        window.location.href = '../instructor/dashboard.html';
+                        break;
+                    case 'admin':
+                        window.location.href = '../admin/dashboard.html';
+                        break;
+                    default:
+                        window.location.href = '../student/dashboard.html';
+                }
+            });
+            
+            // Pre-select user type if specified in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const typeParam = urlParams.get('type');
+            if (typeParam) {
+                userTypeRadios.forEach(radio => {
+                    if (radio.value === typeParam) {
+                        radio.checked = true;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

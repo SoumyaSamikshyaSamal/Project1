@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management - LMS Platform</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h3 {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 10px 20px;
+            color: #adb5bd;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid #007bff;
+        }
+        
+        .sidebar-menu li a.active {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            background-color: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h2 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: #343a40;
+        }
+        
+        .data-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-published {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .status-draft {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .status-archived {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .action-btn-view {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+        
+        .action-btn-edit {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .action-btn-delete {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .search-filter-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .content-form {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #6c757d;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../index.html">LMS Platform</a></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="courses.html">Courses</a></li>
+                    <li><a href="#" id="user-dropdown" class="active">Admin ▼</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Portal</h3>
+                <p>Welcome back, Admin!</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html">📊 Dashboard</a></li>
+                <li><a href="users.html">👥 User Management</a></li>
+                <li><a href="courses.html">📚 Course Management</a></li>
+                <li><a href="content-management.html" class="active">📝 Content Management</a></li>
+                <li><a href="support-helpdesk.html">🎧 Support Help Desk</a></li>
+                <li><a href="reports.html">📈 Reports</a></li>
+                <li><a href="settings.html">⚙️ Settings</a></li>
+                <li><a href="../shared/login.html">🚪 Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2>Content Management</h2>
+                <p>Create, organize, and publish educational materials</p>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="content-list">Content Library</div>
+                <div class="tab" data-tab="add-content">Add New Content</div>
+                <div class="tab" data-tab="categories">Categories</div>
+            </div>
+
+            <div id="content-list" class="tab-content active">
+                <div class="search-filter-container">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search content...">
+                    </div>
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="videos">Videos</option>
+                            <option value="documents">Documents</option>
+                            <option value="presentations">Presentations</option>
+                            <option value="quizzes">Quizzes</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Author</th>
+                                <th>Status</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Introduction to Python Programming</td>
+                                <td>Programming</td>
+                                <td>Document</td>
+                                <td>Sarah Johnson</td>
+                                <td><span class="status-badge status-published">Published</span></td>
+                                <td>2023-06-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Data Science Fundamentals</td>
+                                <td>Data Science</td>
+                                <td>Video</td>
+                                <td>Robert Wilson</td>
+                                <td><span class="status-badge status-published">Published</span></td>
+                                <td>2023-06-14</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Web Development Course Materials</td>
+                                <td>Web Development</td>
+                                <td>Presentation</td>
+                                <td>Michael Chen</td>
+                                <td><span class="status-badge status-draft">Draft</span></td>
+                                <td>2023-06-12</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Business Analytics Course</td>
+                                <td>Business</td>
+                                <td>Quiz</td>
+                                <td>Jennifer Lee</td>
+                                <td><span class="status-badge status-archived">Archived</span></td>
+                                <td>2023-06-10</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="add-content" class="tab-content">
+                <div class="content-form">
+                    <div class="form-group">
+                        <label for="content-title">Content Title</label>
+                        <input type="text" id="content-title" class="form-control" placeholder="Enter content title">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="content-category">Category</label>
+                            <select id="content-category" class="form-control">
+                                <option value="">Select Category</option>
+                                <option value="programming">Programming</option>
+                                <option value="data-science">Data Science</option>
+                                <option value="web-development">Web Development</option>
+                                <option value="business">Business</option>
+                                <option value="design">Design</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="content-type">Content Type</label>
+                            <select id="content-type" class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="document">Document</option>
+                                <option value="video">Video</option>
+                                <option value="presentation">Presentation</option>
+                                <option value="quiz">Quiz</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="content-description">Description</label>
+                        <textarea id="content-description" class="form-control" placeholder="Enter content description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content-file">Upload File</label>
+                        <input type="file" id="content-file" class="form-control">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="content-author">Author</label>
+                            <input type="text" id="content-author" class="form-control" placeholder="Enter author name">
+                        </div>
+                        <div class="form-group">
+                            <label for="content-status">Status</label>
+                            <select id="content-status" class="form-control">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                                <option value="archived">Archived</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn-secondary">Cancel</button>
+                        <button class="btn-primary">Save Content</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="categories" class="tab-content">
+                <div class="section-header">
+                    <h3>Content Categories</h3>
+                    <button class="btn btn-primary">Add New Category</button>
+                </div>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Description</th>
+                                <th>Content Count</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Programming</td>
+                                <td>Programming languages and software development</td>
+                                <td>15</td>
+                                <td>2023-05-10</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Data Science</td>
+                                <td>Data analysis, machine learning, and statistics</td>
+                                <td>12</td>
+                                <td>2023-05-12</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Web Development</td>
+                                <td>Frontend and backend web development</td>
+                                <td>18</td>
+                                <td>2023-05-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Business</td>
+                                <td>Business analytics, management, and entrepreneurship</td>
+                                <td>10</td>
+                                <td>2023-05-20</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                        <span class="action-btn action-btn-delete">Delete</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // User dropdown functionality
+            const userDropdown = document.getElementById('user-dropdown');
+            if (userDropdown) {
+                userDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Toggle dropdown menu
+                });
+            }
+        });
+    </script>
+</body>
+</html>

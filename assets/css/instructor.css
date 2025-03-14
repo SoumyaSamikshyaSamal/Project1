@@ -1,0 +1,206 @@
+/* Instructor-specific styles */
+
+/* Custom color scheme for instructor */
+:root {
+    --instructor-primary: #2196f3;
+    --instructor-secondary: #64b5f6;
+    --instructor-accent: #ff9800;
+    --instructor-light: #e3f2fd;
+    --instructor-dark: #1976d2;
+}
+
+/* Instructor header customization */
+.instructor-header {
+    background-color: var(--instructor-primary);
+}
+
+/* Instructor sidebar customization */
+.sidebar {
+    background: linear-gradient(to bottom, #1976d2, #0d47a1);
+}
+
+.sidebar-header h3 {
+    color: var(--instructor-accent);
+}
+
+.sidebar-menu li a:hover, .sidebar-menu li a.active {
+    border-left-color: var(--instructor-accent);
+}
+
+/* Instructor cards and elements */
+.stat-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+.stat-icon {
+    background-color: rgba(33, 150, 243, 0.1);
+    color: var(--instructor-primary);
+}
+
+/* Course cards */
+.course-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.course-progress {
+    height: 5px;
+    background-color: #e9ecef;
+    margin-top: 15px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--instructor-primary);
+}
+
+/* Instructor tables */
+.data-table th {
+    background-color: var(--instructor-light);
+    color: var(--instructor-dark);
+}
+
+/* Instructor buttons */
+.instructor-btn-primary {
+    background-color: var(--instructor-primary);
+    color: white;
+    border: 2px solid var(--instructor-primary);
+}
+
+.instructor-btn-primary:hover {
+    background-color: var(--instructor-dark);
+    border-color: var(--instructor-dark);
+}
+
+.instructor-btn-outline {
+    background-color: transparent;
+    color: var(--instructor-primary);
+    border: 2px solid var(--instructor-primary);
+}
+
+.instructor-btn-outline:hover {
+    background-color: var(--instructor-primary);
+    color: white;
+}
+
+/* Instructor forms */
+.instructor-form input:focus, 
+.instructor-form select:focus, 
+.instructor-form textarea:focus {
+    border-color: var(--instructor-primary);
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
+}
+
+/* Course creation and editing */
+.course-builder {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.module-card {
+    background-color: var(--instructor-light);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--instructor-primary);
+}
+
+.lesson-item {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.drag-handle {
+    cursor: move;
+    color: #adb5bd;
+    margin-right: 10px;
+}
+
+/* Student list */
+.student-card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.student-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--instructor-light);
+    color: var(--instructor-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.student-info {
+    flex: 1;
+}
+
+.student-info h4 {
+    margin: 0 0 5px 0;
+    color: #343a40;
+}
+
+.student-info p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.student-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Responsive instructor layout */
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--instructor-primary);
+        color: white;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}

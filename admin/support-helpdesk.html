@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Help Desk - LMS Platform</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h3 {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 10px 20px;
+            color: #adb5bd;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 4px solid #007bff;
+        }
+        
+        .sidebar-menu li a.active {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            background-color: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h2 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: #343a40;
+        }
+        
+        .data-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-open {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+        
+        .status-in-progress {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .status-resolved {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .status-closed {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .priority-high {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .priority-medium {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .priority-low {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .action-btn-view {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+        
+        .action-btn-edit {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .action-btn-delete {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .search-filter-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #6c757d;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .ticket-detail {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .ticket-title h3 {
+            margin-bottom: 5px;
+            color: #343a40;
+        }
+        
+        .ticket-meta {
+            display: flex;
+            gap: 15px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .ticket-content {
+            margin-bottom: 30px;
+        }
+        
+        .ticket-content p {
+            line-height: 1.6;
+            color: #495057;
+        }
+        
+        .ticket-response {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .response-author {
+            font-weight: 500;
+            color: #343a40;
+        }
+        
+        .response-date {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .response-content p {
+            line-height: 1.6;
+            color: #495057;
+        }
+        
+        .reply-form {
+            margin-top: 30px;
+        }
+        
+        .reply-form h4 {
+            margin-bottom: 15px;
+            color: #343a40;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><a href="../index.html">LMS Platform</a></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="courses.html">Courses</a></li>
+                    <li><a href="#" id="user-dropdown" class="active">Admin ▼</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Portal</h3>
+                <p>Welcome back, Admin!</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html">📊 Dashboard</a></li>
+                <li><a href="users.html">👥 User Management</a></li>
+                <li><a href="courses.html">📚 Course Management</a></li>
+                <li><a href="content-management.html">📝 Content Management</a></li>
+                <li><a href="support-helpdesk.html" class="active">🎧 Support Help Desk</a></li>
+                <li><a href="reports.html">📈 Reports</a></li>
+                <li><a href="settings.html">⚙️ Settings</a></li>
+                <li><a href="../shared/login.html">🚪 Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2>Support Help Desk</h2>
+                <p>Manage support tickets and user inquiries</p>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="tickets-list">All Tickets</div>
+                <div class="tab" data-tab="open-tickets">Open Tickets</div>
+                <div class="tab" data-tab="ticket-detail">Ticket Details</div>
+            </div>
+
+            <div id="tickets-list" class="tab-content active">
+                <div class="search-filter-container">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search tickets...">
+                    </div>
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="open">Open</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Priority</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Submitted By</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TK-1001</td>
+                                <td>Cannot access course materials</td>
+                                <td>John Smith</td>
+                                <td><span class="status-badge status-open">Open</span></td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td>2023-06-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TK-1002</td>
+                                <td>Payment issue with course enrollment</td>
+                                <td>Sarah Johnson</td>
+                                <td><span class="status-badge status-in-progress">In Progress</span></td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td>2023-06-14</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TK-1003</td>
+                                <td>Question about course certificate</td>
+                                <td>Michael Brown</td>
+                                <td><span class="status-badge status-resolved">Resolved</span></td>
+                                <td><span class="priority-badge priority-medium">Medium</span></td>
+                                <td>2023-06-13</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TK-1004</td>
+                                <td>Request for course extension</td>
+                                <td>Emily Davis</td>
+                                <td><span class="status-badge status-closed">Closed</span></td>
+                                <td><span class="priority-badge priority-low">Low</span></td>
+                                <td>2023-06-12</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TK-1005</td>
+                                <td>Technical issue with video playback</td>
+                                <td>Robert Wilson</td>
+                                <td><span class="status-badge status-open">Open</span></td>
+                                <td><span class="priority-badge priority-medium">Medium</span></td>
+                                <td>2023-06-10</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="open-tickets" class="tab-content">
+                <div class="search-filter-container">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search open tickets...">
+                    </div>
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="">All Priority</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Submitted By</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#TK-1001</td>
+                                <td>Cannot access course materials</td>
+                                <td>John Smith</td>
+                                <td><span class="status-badge status-open">Open</span></td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td>2023-06-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#TK-1005</td>
+                                <td>Technical issue with video playback</td>
+                                <td>Robert Wilson</td>
+                                <td><span class="status-badge status-open">Open</span></td>
+                                <td><span class="priority-badge priority-medium">Medium</span></td>
+                                <td>2023-06-10</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn action-btn-view">View</span>
+                                        <span class="action-btn action-btn-edit">Edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="ticket-detail" class="tab-content">
+                <div class="ticket-detail">
+                    <div class="ticket-header">
+                        <div class="ticket-title">
+                            <h3>Cannot access course materials</h3>
+                            <div class="ticket-meta">
+                                <span>Ticket ID: #TK-1001</span>
+                                <span>Submitted by: John Smith</span>
+                                <span>Created: 2023-06-15</span>
+                            </div>
+                        </div>
+                        <div class="ticket-status">
+                            <span class="status-badge status-open">Open</span>
+                            <span class="priority-badge priority-high">High Priority</span>
+                        </div>
+                    </div>
+                    <div class="ticket-content">
+                        <p>I'm having trouble accessing the course materials for the "Introduction to Programming" course. When I click on the course content, I get an error message saying "Content not available". I've already tried clearing my browser cache and using a different browser, but the issue persists.</p>
+                        <p>Can you please help me resolve this issue as soon as possible? I need to complete this course by the end of the week.</p>
+                    </div>
+                    
+                    <div class="ticket-responses">
+                        <h4>Responses</h4>
+                        <div class="ticket-response">
+                            <div class="response-header">
+                                <span class="response-author">Admin (Sarah Johnson)</span>
+                                <span class="response-date">2023-06-15, 14:30</span>
+                            </div>
+                            <div class="response-content">
+                                <p>Hi John,</p>
+                                <p>Thank you for reporting this issue. I'm looking into it right now and will get back to you shortly with a solution.</p>
+                                <p>In the meantime, could you please provide me with your browser version and operating system? This will help me troubleshoot the issue more effectively.</p>
+                                <p>Best regards,<br>Sarah</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reply-form">
+                        <h4>Add Response</h4>
+                        <div class="form-group">
+                            <label for="response-message">Message</label>
+                            <textarea id="response-message" class="form-control" placeholder="Type your response here..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ticket-status">Update Status</label>
+                                <select id="ticket-status" class="form-control">
+                                    <option value="open">Open</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="resolved">Resolved</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticket-priority">Update Priority</label>
+                                <select id="ticket-priority" class="form-control">
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-container">
+                            <button class="btn-secondary">Cancel</button>
+                            <button class="btn-primary">Send Response</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // User dropdown functionality
+            const userDropdown = document.getElementById('user-dropdown');
+            if (userDropdown) {
+                userDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Toggle dropdown menu
+                });
+            }
+            
+            // View ticket functionality
+            const viewButtons = document.querySelectorAll('.action-btn-view');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Activate ticket detail tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    document.querySelector('[data-tab="ticket-detail"]').classList.add('active');
+                    document.getElementById('ticket-detail').classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
